@@ -1,0 +1,10 @@
+{
+	"id": "archiver",
+	"name": "Archiver",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Easily archive or duplicate notes in Obsidian.",
+	"author": "hammadXP",
+	"authorUrl": "https://github.com/hammadxp",
+	"isDesktopOnly": false
+}
