@@ -1,7 +1,7 @@
 {
-	"name": "archiver",
+	"name": "back-it-up",
 	"version": "1.0.0",
-	"description": "Quickly archive or duplicate a note in Obsidian.",
+	"description": "Quickly make a copy or snapshot of a note in Obsidian.",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",

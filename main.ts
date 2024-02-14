@@ -1,23 +1,23 @@
 import { App, Plugin, PluginSettingTab, Setting } from "obsidian";
-import { archiveNote, makeCopyOfNote } from "functions";
+import { archiveNote, makeCopyOfNote } from "actions";
 
-interface ArchiverPluginSettings {
+interface BackItUpPluginSettings {
 	archiveFolderName: string;
 }
 
-const DEFAULT_SETTINGS: Partial<ArchiverPluginSettings> = {
+const DEFAULT_SETTINGS: Partial<BackItUpPluginSettings> = {
 	archiveFolderName: "🟣 Archive",
 };
 
-export default class ArchiverPlugin extends Plugin {
-	settings: ArchiverPluginSettings;
+export default class BackItUpPlugin extends Plugin {
+	settings: BackItUpPluginSettings;
 
 	async onload() {
 		await this.loadSettings();
 
-		console.log("Archiver: Loading plugin...");
+		console.log("BackItUp: Loading plugin...");
 
-		this.addSettingTab(new ArchiverSettingTab(this.app, this));
+		this.addSettingTab(new BackItUpSettingTab(this.app, this));
 
 		this.registerDomEvent(document, "click", (evt: MouseEvent) => {
 			console.log("click", evt);
@@ -51,7 +51,7 @@ export default class ArchiverPlugin extends Plugin {
 	}
 
 	onunload() {
-		console.log("Archiver: Unloading plugin...");
+		console.log("BackItUp: Unloading plugin...");
 	}
 
 	async loadSettings() {
@@ -67,10 +67,10 @@ export default class ArchiverPlugin extends Plugin {
 	}
 }
 
-class ArchiverSettingTab extends PluginSettingTab {
-	plugin: ArchiverPlugin;
+class BackItUpSettingTab extends PluginSettingTab {
+	plugin: BackItUpPlugin;
 
-	constructor(app: App, plugin: ArchiverPlugin) {
+	constructor(app: App, plugin: BackItUpPlugin) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}

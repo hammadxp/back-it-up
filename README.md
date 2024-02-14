@@ -1,13 +1,16 @@
-Archiver is a simple plugin for Obsidian to quickly archive or duplicate a note. Ever feel the need to backup an important note before modifying it or just to keep a history of changes to a note, I felt that too, that's why I created this plugin :)
+Ever feel the need to backup an important note before modifying it or just to keep a history of changes made to it, this plugin will come in handy in such situations.
 
-Simply right click a note and select "Archive note" to move it directly to the configured archive folder.
+BackItUp is a simple Obsidian plugin to quickly backup any note. Simply right click a note and you get two options:
+
+1. "Make a copy" which will create a copy of the selected note right next to it.
+2. "Keep a snapshot" which will copy the note to a user-defined folder.
 
 ## Install
 
 Make sure your NodeJS is at least v16 (`node --version`).
 
--   Clone this repo to `.obsidian` in your Obsidian vault.
--   `npm i` or `yarn` to install dependencies.
--   Enable plugin in `Obsidian -> Settings -> Community plugins`
+-   Clone this repo to `.obsidian/plugins` folder in your Obsidian vault.
+-   Run `npm i` or `yarn` to install plugin dependencies.
+-   Now enable this plugin in `Obsidian -> Settings -> Community plugins`
 
 That's it, enjoy!

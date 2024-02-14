@@ -22,7 +22,7 @@ export async function makeCopyOfNote(file: TAbstractFile) {
 		new Notice("Note duplicated.");
 
 		console.log(
-			`Archiver: Note duplicated as "${file.name} (${timestamp})"`
+			`BackItUp: Note duplicated as "${file.name} (${timestamp})"`
 		);
 	} catch (err) {
 		console.error("Error:", err.message);
@@ -54,7 +54,7 @@ export async function archiveNote(file: TAbstractFile) {
 
 		new Notice("Note archived.");
 
-		console.log(`Archiver: Note archived to "${archiveFolderName}"`);
+		console.log(`BackItUp: Note archived to "${archiveFolderName}"`);
 	} catch (err) {
 		console.error("Error:", err.message);
 	}
