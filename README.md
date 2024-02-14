@@ -3,7 +3,7 @@ Ever feel the need to backup an important note before modifying it or just to ke
 BackItUp is a simple Obsidian plugin to quickly backup any note. Simply right click a note and you get two options:
 
 1. "Make a copy" which will create a copy of the selected note right next to it.
-2. "Keep a snapshot" which will copy the note to a user-defined folder.
+2. "Take a snapshot" which will create a copy the note to a user-defined folder.
 
 ## Install
 

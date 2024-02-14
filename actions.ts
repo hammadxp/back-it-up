@@ -19,42 +19,40 @@ export async function makeCopyOfNote(file: TAbstractFile) {
 	try {
 		await fsPromises.copyFile(srcFilePath, destFilePath);
 
-		new Notice("Note duplicated.");
+		new Notice("Copy created.");
 
-		console.log(
-			`BackItUp: Note duplicated as "${file.name} (${timestamp})"`
-		);
+		console.log(`BackItUp: Copy created as "${file.name} (${timestamp})"`);
 	} catch (err) {
 		console.error("Error:", err.message);
 	}
 }
 
-export async function archiveNote(file: TAbstractFile) {
+export async function makeSnapshotOfNote(file: TAbstractFile) {
 	const fileObj = file as any;
 	const vaultPath = (this.app.vault.adapter as any).basePath;
 	const timestamp = getTimestamp();
 
-	const archiveFolderName = this.settings.archiveFolderName;
-	const archiveFolderPath = path.join(vaultPath, archiveFolderName);
-	const archiveFileName = `${fileObj.basename} (${timestamp}).${fileObj.extension}`;
+	const snapshotFolderName = this.settings.snapshotFolderName;
+	const snapshotFolderPath = path.join(vaultPath, snapshotFolderName);
+	const snapshotFileName = `${fileObj.basename} (${timestamp}).${fileObj.extension}`;
 
 	const srcFilePath = path.join(vaultPath, file.path);
-	const destFilePath = path.join(archiveFolderPath, archiveFileName);
+	const destFilePath = path.join(snapshotFolderPath, snapshotFileName);
 
 	console.log(srcFilePath, destFilePath);
 
 	try {
-		// create archive folder first
-		await fsPromises.mkdir(archiveFolderPath, {
+		// create snapshot folder first
+		await fsPromises.mkdir(snapshotFolderPath, {
 			recursive: true,
 		});
 
-		// copy note to archive folder
+		// copy note to snapshot folder
 		await fsPromises.copyFile(srcFilePath, destFilePath);
 
-		new Notice("Note archived.");
+		new Notice("Snapshot created.");
 
-		console.log(`BackItUp: Note archived to "${archiveFolderName}"`);
+		console.log(`BackItUp: Snapshot created to "${snapshotFolderName}"`);
 	} catch (err) {
 		console.error("Error:", err.message);
 	}

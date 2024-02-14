@@ -1,12 +1,12 @@
 import { App, Plugin, PluginSettingTab, Setting } from "obsidian";
-import { archiveNote, makeCopyOfNote } from "actions";
+import { makeCopyOfNote, makeSnapshotOfNote } from "actions";
 
 interface BackItUpPluginSettings {
-	archiveFolderName: string;
+	snapshotFolderName: string;
 }
 
 const DEFAULT_SETTINGS: Partial<BackItUpPluginSettings> = {
-	archiveFolderName: "🟣 Archive",
+	snapshotFolderName: "🟣 Archive",
 };
 
 export default class BackItUpPlugin extends Plugin {
@@ -40,10 +40,10 @@ export default class BackItUpPlugin extends Plugin {
 
 				menu.addItem((item) =>
 					item
-						.setTitle("Archive note")
-						.setIcon("archive")
+						.setTitle("Take a snapshot")
+						.setIcon("copy-plus")
 						.onClick(async () => {
-							await archiveNote.bind(this)(file);
+							await makeSnapshotOfNote.bind(this)(file);
 						})
 				);
 			})
@@ -81,16 +81,16 @@ class BackItUpSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		new Setting(containerEl)
-			.setName("Archive folder")
+			.setName("Snapshot folder")
 			.setDesc(
-				'Archived notes will be moved to this folder. Example: "folder\\subfolder"'
+				'Snapshot notes will be copied to this folder. Example: "Archive\\My snapshots"'
 			)
 			.addText((text) =>
 				text
 					.setPlaceholder("Enter folder name")
-					.setValue(this.plugin.settings.archiveFolderName)
+					.setValue(this.plugin.settings.snapshotFolderName)
 					.onChange(async (value) => {
-						this.plugin.settings.archiveFolderName = value;
+						this.plugin.settings.snapshotFolderName = value;
 						await this.plugin.saveSettings();
 					})
 			);
