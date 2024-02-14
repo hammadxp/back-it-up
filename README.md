@@ -5,12 +5,17 @@ BackItUp is a simple Obsidian plugin to quickly backup any note. Simply right cl
 1. "Make a copy" which will create a copy of the selected note right next to it.
 2. "Take a snapshot" which will create a copy the note to a user-defined folder.
 
-## Install
+## Setup
 
 Make sure your NodeJS is at least v16 (`node --version`).
 
--   Clone this repo to `.obsidian/plugins` folder in your Obsidian vault.
--   Run `npm i` or `yarn` to install plugin dependencies.
+-   `cd path/to/obsidian/vault`
+-   `mkdir .obsidian/plugins`
+-   `cd .obsidian/plugins`
+-   `git clone https://github.com/hammadxp/back-it-up`
+-   `cd back-it-up`
+-   `npm i` or `yarn` to install plugin dependencies.
+-   `npm run dev` to start the development server
 -   Now enable this plugin in `Obsidian -> Settings -> Community plugins`
 
-That's it, enjoy!
+You can start working on this plugin now, enjoy!
