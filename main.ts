@@ -1,14 +1,12 @@
-import { App, Notice, Plugin, PluginSettingTab, Setting } from "obsidian";
-import * as path from "path";
-import { promises as fsPromises } from "fs";
-import { getTimestamp } from "utils";
+import { App, Plugin, PluginSettingTab, Setting } from "obsidian";
+import { archiveNote, makeCopyOfNote } from "functions";
 
 interface ArchiverPluginSettings {
-	archiveFolder: string;
+	archiveFolderName: string;
 }
 
 const DEFAULT_SETTINGS: Partial<ArchiverPluginSettings> = {
-	archiveFolder: "🟣 Archive",
+	archiveFolderName: "🟣 Archive",
 };
 
 export default class ArchiverPlugin extends Plugin {
@@ -33,48 +31,19 @@ export default class ArchiverPlugin extends Plugin {
 			this.app.workspace.on("file-menu", (menu, file) => {
 				menu.addItem((item) =>
 					item
+						.setTitle("Make a copy")
+						.setIcon("copy")
+						.onClick(async () => {
+							await makeCopyOfNote.bind(this)(file);
+						})
+				);
+
+				menu.addItem((item) =>
+					item
 						.setTitle("Archive note")
 						.setIcon("archive")
 						.onClick(async () => {
-							const fileObj = file as any;
-							const vaultPath = (this.app.vault.adapter as any)
-								.basePath;
-							const timestamp = getTimestamp();
-
-							const archiveFileName = `${fileObj.basename} (${timestamp}).${fileObj.extension}`;
-							const archiveFolderName =
-								this.settings.archiveFolder;
-							const archiveFolderPath = path.join(
-								vaultPath,
-								archiveFolderName
-							);
-
-							const srcFilePath = path.join(vaultPath, file.name);
-							const destFilePath = path.join(
-								archiveFolderPath,
-								archiveFileName
-							);
-
-							try {
-								// create archive folder first
-								await fsPromises.mkdir(archiveFolderPath, {
-									recursive: true,
-								});
-
-								// copy note to archive folder
-								await fsPromises.copyFile(
-									srcFilePath,
-									destFilePath
-								);
-
-								new Notice("Note archived.");
-
-								console.log(
-									`Archiver: Note archived to "${archiveFolderName}"`
-								);
-							} catch (err) {
-								console.error("Error:", err.message);
-							}
+							await archiveNote.bind(this)(file);
 						})
 				);
 			})
@@ -119,9 +88,9 @@ class ArchiverSettingTab extends PluginSettingTab {
 			.addText((text) =>
 				text
 					.setPlaceholder("Enter folder name")
-					.setValue(this.plugin.settings.archiveFolder)
+					.setValue(this.plugin.settings.archiveFolderName)
 					.onChange(async (value) => {
-						this.plugin.settings.archiveFolder = value;
+						this.plugin.settings.archiveFolderName = value;
 						await this.plugin.saveSettings();
 					})
 			);
