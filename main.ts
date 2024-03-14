@@ -19,10 +19,6 @@ export default class BackItUpPlugin extends Plugin {
 
 		this.addSettingTab(new BackItUpSettingTab(this.app, this));
 
-		this.registerDomEvent(document, "click", (evt: MouseEvent) => {
-			console.log("click", evt);
-		});
-
 		this.registerInterval(
 			window.setInterval(() => console.log("setInterval"), 5 * 60 * 1000)
 		);
