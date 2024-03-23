@@ -1,12 +1,14 @@
-import { App, Plugin, PluginSettingTab, Setting } from "obsidian";
+import { App, Plugin, PluginSettingTab, Setting, TFile } from "obsidian";
 import { makeCopyOfNote, makeSnapshotOfNote } from "actions";
 
 interface BackItUpPluginSettings {
-	snapshotFolderName: string;
+	snapshotFolder: string;
+	switchToNewNote: boolean;
 }
 
 const DEFAULT_SETTINGS: Partial<BackItUpPluginSettings> = {
-	snapshotFolderName: "🟣 Archive",
+	snapshotFolder: "🟣 Archive",
+	switchToNewNote: false,
 };
 
 export default class BackItUpPlugin extends Plugin {
@@ -19,29 +21,59 @@ export default class BackItUpPlugin extends Plugin {
 
 		this.addSettingTab(new BackItUpSettingTab(this.app, this));
 
-		this.registerInterval(
-			window.setInterval(() => console.log("setInterval"), 5 * 60 * 1000)
-		);
-
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu, file) => {
-				menu.addItem((item) =>
-					item
-						.setTitle("Make a copy")
-						.setIcon("copy")
-						.onClick(async () => {
-							await makeCopyOfNote.bind(this)(file);
-						})
-				);
+				if (file instanceof TFile) {
+					menu.addItem((item) =>
+						item
+							.setTitle("Make a copy")
+							.setIcon("copy")
+							.onClick(async () => {
+								const filePathOfCopy =
+									await makeCopyOfNote.bind(this)(file);
 
-				menu.addItem((item) =>
-					item
-						.setTitle("Take a snapshot")
-						.setIcon("copy-plus")
-						.onClick(async () => {
-							await makeSnapshotOfNote.bind(this)(file);
-						})
-				);
+								const fileObjOfCopy =
+									this.app.vault.getAbstractFileByPath(
+										filePathOfCopy
+									);
+
+								// Setting: switch to new note
+								if (this.settings.switchToNewNote) {
+									const leaf =
+										this.app.workspace.getLeaf(true);
+
+									if (fileObjOfCopy instanceof TFile) {
+										leaf.openFile(fileObjOfCopy);
+									}
+								}
+							})
+					);
+
+					menu.addItem((item) =>
+						item
+							.setTitle("Take a snapshot")
+							.setIcon("copy-plus")
+							.onClick(async () => {
+								const filePathOfCopy =
+									await makeSnapshotOfNote.bind(this)(file);
+
+								const fileObjOfCopy =
+									this.app.vault.getAbstractFileByPath(
+										filePathOfCopy
+									);
+
+								// Setting: switch to new note
+								if (this.settings.switchToNewNote) {
+									const leaf =
+										this.app.workspace.getLeaf(true);
+
+									if (fileObjOfCopy instanceof TFile) {
+										leaf.openFile(fileObjOfCopy);
+									}
+								}
+							})
+					);
+				}
 			})
 		);
 	}
@@ -84,11 +116,25 @@ class BackItUpSettingTab extends PluginSettingTab {
 			.addText((text) =>
 				text
 					.setPlaceholder("Enter folder name")
-					.setValue(this.plugin.settings.snapshotFolderName)
+					.setValue(this.plugin.settings.snapshotFolder)
 					.onChange(async (value) => {
-						this.plugin.settings.snapshotFolderName = value;
+						this.plugin.settings.snapshotFolder = value;
 						await this.plugin.saveSettings();
 					})
 			);
+
+		new Setting(containerEl)
+			.setName("Switch to new note")
+			.setDesc(
+				"If turned on, the editor will switch to the new note after creating it"
+			)
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.switchToNewNote)
+					.onChange(async (value) => {
+						this.plugin.settings.switchToNewNote = value;
+						await this.plugin.saveSettings();
+					});
+			});
 	}
 }

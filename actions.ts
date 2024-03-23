@@ -1,12 +1,9 @@
-import { Notice } from "obsidian";
+import { Notice, TFile } from "obsidian";
 import { getTimestamp } from "utils";
-import { TAbstractFile } from "obsidian";
 
-export async function makeCopyOfNote(file: TAbstractFile) {
+export async function makeCopyOfNote(file: TFile) {
 	const timestamp = getTimestamp();
-	const filePathOfCopy = `${file.parent?.path}/${
-		(file as any).basename
-	} (${timestamp}).${(file as any).extension}`;
+	const filePathOfCopy = `${file.parent?.path}/${file.basename} (${timestamp}).${file.extension}`;
 
 	try {
 		// create a copy of file
@@ -14,25 +11,25 @@ export async function makeCopyOfNote(file: TAbstractFile) {
 
 		new Notice("Copy created.");
 		console.log(`BackItUp: Copy created to "${filePathOfCopy}"`);
+
+		return filePathOfCopy;
 	} catch (err) {
 		console.error("Error:", err.message);
 	}
 }
 
-export async function makeSnapshotOfNote(file: TAbstractFile) {
+export async function makeSnapshotOfNote(file: TFile) {
 	const timestamp = getTimestamp();
-	const filePathOfCopy = `${this.settings.snapshotFolderName}/${
-		(file as any).basename
-	} (${timestamp}).${(file as any).extension}`;
+	const filePathOfCopy = `${this.settings.snapshotFolder}/${file.basename} (${timestamp}).${file.extension}`;
 
 	try {
 		const doesFolderExist = await this.app.vault.adapter.exists(
-			this.settings.snapshotFolderName
+			this.settings.snapshotFolder
 		);
 
+		// create snapshot folder
 		if (!doesFolderExist) {
-			// create snapshot folder
-			await this.app.vault.createFolder(this.settings.snapshotFolderName);
+			await this.app.vault.createFolder(this.settings.snapshotFolder);
 		}
 
 		// copy note to snapshot folder
@@ -40,6 +37,8 @@ export async function makeSnapshotOfNote(file: TAbstractFile) {
 
 		new Notice("Snapshot created.");
 		console.log(`BackItUp: Snapshot created to "${filePathOfCopy}"`);
+
+		return filePathOfCopy;
 	} catch (err) {
 		console.error("Error:", err.message);
 	}
