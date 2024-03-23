@@ -1,9 +1,11 @@
-import { Notice, TFile } from "obsidian";
-import { getTimestamp } from "utils";
+import { TFile, Notice, normalizePath } from "obsidian";
+import { getTimestamp } from "helper/utils";
 
 export async function makeCopyOfNote(file: TFile) {
 	const timestamp = getTimestamp();
-	const filePathOfCopy = `${file.parent?.path}/${file.basename} (${timestamp}).${file.extension}`;
+	const filePathOfCopy = normalizePath(
+		`${file.parent?.path}/${file.basename} (${timestamp}).${file.extension}`
+	);
 
 	try {
 		// create a copy of file
@@ -20,7 +22,9 @@ export async function makeCopyOfNote(file: TFile) {
 
 export async function makeSnapshotOfNote(file: TFile) {
 	const timestamp = getTimestamp();
-	const filePathOfCopy = `${this.settings.snapshotFolder}/${file.basename} (${timestamp}).${file.extension}`;
+	const filePathOfCopy = normalizePath(
+		`${this.settings.snapshotFolder}/${file.basename} (${timestamp}).${file.extension}`
+	);
 
 	try {
 		const doesFolderExist = await this.app.vault.adapter.exists(

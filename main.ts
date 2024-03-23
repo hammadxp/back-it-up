@@ -1,5 +1,5 @@
 import { App, Plugin, PluginSettingTab, Setting, TFile } from "obsidian";
-import { makeCopyOfNote, makeSnapshotOfNote } from "actions";
+import { makeCopyOfNote, makeSnapshotOfNote } from "helper/actions";
 
 interface BackItUpPluginSettings {
 	snapshotFolder: string;
